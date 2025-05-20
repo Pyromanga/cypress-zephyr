@@ -2,13 +2,15 @@ import { writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import AdmZip from 'adm-zip';
 
+const basePath = join(__dirname, '..')
+
 export const cypressReportPath = 'cypress/reports/zephyr';
 
 export function archiveReport(filename: string, reportPath: string) {
   try {
     const zip = new AdmZip();
-    const jsonReportPath = join(process.cwd(), reportPath, filename);
-    const zipPath = join(process.cwd(), reportPath, `${filename}.zip`);
+    const jsonReportPath = join(basePath, reportPath, filename);
+    const zipPath = join(basePath, reportPath, `${filename}.zip`);
 
     zip.addLocalFile(jsonReportPath);
     zip.writeZip(zipPath);
@@ -29,7 +31,7 @@ function createReporterDirectory(filePath: string) {
 
 export function createJsonReport(filename: string, filePath: string, executions: unknown) {
   const jsonReport = JSON.stringify({ version: 1, executions: executions }, null, 2);
-  const jsonReportPath = join(process.cwd(), filePath, filename);
+  const jsonReportPath = join(basePath, filePath, filename);
 
   try {
     createReporterDirectory(filePath);
